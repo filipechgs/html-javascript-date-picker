@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <noscript>
+        <div style="width: 100%; background-color: #ffcc00; text-align: center; padding: 10px;">
+            Este site requer JavaScript habilitado. Por favor, habilite o JavaScript no seu navegador.
+        </div>
+    </noscript>
+
+    <div id="date-picker">
+        <select name="date-year" id="date-year">
+            <option value="">Ano</option>
+        </select>
+
+        <select name="date-month" id="date-month">
+            <option value="">Mês</option>
+            <option value="01">Janeiro</option>
+            <option value="02">Fevereiro</option>
+            <option value="03">Março</option>
+            <option value="04">Abril</option>
+            <option value="05">Maio</option>
+            <option value="06">Junho</option>
+            <option value="07">Julho</option>
+            <option value="08">Agosto</option>
+            <option value="09">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+        </select>
+
+        <select name="date-day" id="date-day">
+            <option value="">Dia</option>
+        </select>
+    </div>
+
+    <script>
+        appendYearsOptions('date-year');
+        appendDaysOptions('date-day', 'date-month', 'date-year');
+
+        function appendYearsOptions(elementId) {
+            const dateYears = document.getElementById(elementId);
+            const date = new Date();
+
+            for (let y = date.getFullYear(); y >= date.getFullYear() - 100; y--) {
+                const newOption = new Option(`${y}`, `${y}`);
+                dateYears.appendChild(newOption);
+            }
+        }
+
+        function appendDaysOptions(dayElementId, monthElementId, yearElementId) {
+            const daysInput = document.getElementById(dayElementId);
+            const monthInput = document.getElementById(monthElementId);
+            const yearInput = document.getElementById(yearElementId);
+            const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+            let year, leapYear, monthIndex, days;
+
+            yearInput.addEventListener('change', () => {
+                year = yearInput.value;
+                leapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+
+                if (leapYear) daysPerMonth[1] = 29;
+            })
+
+            monthInput.addEventListener('change', () => {
+                monthIndex = parseInt(monthInput.value) - 1;
+                days = daysPerMonth[monthIndex];
+
+                while (daysInput.firstChild) {
+                    daysInput.removeChild(daysInput.firstChild);
+                }
+
+                if (!isNaN(monthIndex)) {
+
+                    for (let d = 1; d <= days; d++) {
+                        const dayOption = new Option(`${d}`, `${d}`);
+                        daysInput.appendChild(dayOption);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
